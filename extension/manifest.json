@@ -1,0 +1,15 @@
+{
+    "manifest_version": 3,
+    "name": "Email Safety Checker",
+    "version": "0.1",
+    "description": "Warns when an email looks unsafe (Gmail v1).",
+    "permissions": ["storage"],
+    "background": { "service_worker": "background.js" },
+    "action": { "default_popup": "popup.html" },
+    "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+  }
