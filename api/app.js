@@ -1,3 +1,4 @@
+const checkRisk = require("./riskchecker");
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -25,6 +26,11 @@ app.get('/', (req, res) => {
 
 // POST route to handle email details
 app.post('/details/', (req, res) => {
+  const link = req.body.link;
+
+  const riskResult = checkRisk(link);
+
+  console.log(riskResult);
   const { error, value } = emailSchema.validate(req.body);
   
   // If the email data is invalid, return 400
