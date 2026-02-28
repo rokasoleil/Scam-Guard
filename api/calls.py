@@ -17,10 +17,12 @@ app.add_middleware(
 class EmailInfo(BaseModel):
     sender: str
     subject: str
-    link: str
+    body: str
 
 @app.post("/details/")
 async def dets(email: EmailInfo):
     print("Received email:", email.dict())
-    return json.dumps({"finished": True})
+    # Do Checks
+
+    return json.dumps({"score": 55, "level": "suspicious", "headline": "Headline here", "reasons": ["Urgent language detected", "Link looks unusual"], "hostname": "google.ca", "final_url": "goolpe.zy"})
 
