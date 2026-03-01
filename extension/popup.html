@@ -1,1 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Phish & Tell</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
 
+  <div class="phish-modal">
+
+    <div class="phish-header">
+      <h1>Phish & Tell</h1>
+      <p>We scanned this link for you</p>
+    </div>
+
+    <div class="risk-card">
+      <div class="risk-circle">
+        <span id="riskScore">78%</span>
+      </div>
+      <div class="risk-label">HIGH RISK</div>
+    </div>
+
+    <div class="domain-card">
+      <h3>Detected Domain</h3>
+      <p class="detected">queensu-verify.tk</p>
+
+      <div class="warning-box">
+        <strong>Domain Mismatch Detected</strong>
+        <p>Official domain: <span class="safe">queensu.ca</span></p>
+        <p>Detected domain: <span class="danger">queensu-verify.tk</span></p>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="safeBtn" class="safe-btn">Go Back to Safety</button>
+      <button id="proceedBtn" class="danger-btn">Proceed Anyway</button>
+    </div>
+
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
