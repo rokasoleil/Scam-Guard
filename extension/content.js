@@ -1,119 +1,52 @@
-const API_URL = "http://127.0.0.1:8000/details/";
-let lastEmailKey = null;
+// content.js
 
-function getEmailDataFromGmail() {
-  const subjectEl = document.querySelector("h2.hP");
-  const senderEl = document.querySelector("span.gD");
-  const senderEmailEl = document.querySelector("span.gD");
-  const bodyEl = document.querySelector("div.a3s");
+function showPhishPopup() {
+  if (document.getElementById("phish-overlay")) return;
 
-  if (!subjectEl || !senderEl || !bodyEl) return null;
+  const overlay = document.createElement("div");
+  overlay.id = "phish-overlay";
 
-  const subject = subjectEl.textContent?.trim() || "";
-  const senderName = senderEl.getAttribute("name") || senderEl.textContent?.trim() || "";
-  const senderEmail = senderEmailEl.getAttribute("email") || "";
-  const body = bodyEl.innerText?.trim() || "";
+  overlay.innerHTML = `
+    <div class="phish-modal">
+      
+      <div class="phish-header">
+        <h1>Phish & Tell</h1>
+        <p>We scanned this link for you</p>
+      </div>
 
-  // key so we don’t re-check the same email repeatedly
-  const key = `${senderEmail}::${subject.slice(0, 40)}`;
-  return { subject, senderName, senderEmail, body, key };
-}
+      <div class="risk-card">
+        <div class="risk-circle">
+          <span>78%</span>
+        </div>
+        <div class="risk-label">HIGH RISK</div>
+      </div>
 
-function removeBanner() {
-  const existing = document.getElementById("scam-guard-banner");
-  if (existing) existing.remove();
-}
+      <div class="domain-card">
+        <h3>Detected Domain</h3>
+        <p class="detected">queensu-verify.tk</p>
 
-function showBanner(result) {
-  removeBanner();
+        <div class="warning-box">
+          <strong>Domain Mismatch Detected</strong>
+          <p>Official domain: <span class="safe">queensu.ca</span></p>
+          <p>Detected domain: <span class="danger">queensu-verify.tk</span></p>
+        </div>
+      </div>
 
-  const banner = document.createElement("div");
-  banner.id = "scam-guard-banner";
-  banner.style.position = "sticky";
-  banner.style.top = "0";
-  banner.style.zIndex = "99999";
-  banner.style.padding = "12px 16px";
-  banner.style.borderRadius = "10px";
-  banner.style.margin = "10px";
-  banner.style.fontFamily = "system-ui, -apple-system, Arial";
-  banner.style.boxShadow = "0 6px 18px rgba(0,0,0,0.15)";
+      <div class="actions">
+        <button class="safe-btn">Go Back to Safety</button>
+        <button class="danger-btn">Proceed Anyway</button>
+      </div>
 
-  const risk = result?.risk ?? "unknown";
-  const reasons = Array.isArray(result?.reasons) ? result.reasons : [];
-
-  let bg = "#eef2ff"; // default
-  let title = "Scam-Guard: checked";
-  if (risk === "high") { bg = "#fee2e2"; title = "⚠️ High risk email"; }
-  if (risk === "medium") { bg = "#fef9c3"; title = "⚠️ Medium risk email"; }
-  if (risk === "low") { bg = "#dcfce7"; title = "✅ Low risk email"; }
-
-  banner.style.background = bg;
-
-  const reasonsHtml = reasons.length
-    ? `<ul style="margin:8px 0 0 18px;">${reasons.map(r => `<li>${r}</li>`).join("")}</ul>`
-    : `<div style="margin-top:8px; opacity:0.85;">No reasons returned.</div>`;
-
-  banner.innerHTML = `
-    <div style="font-weight:700; font-size:14px;">${title}</div>
-    <div style="margin-top:4px; font-size:13px;">
-      Score: <b>${result?.score ?? "?"}</b>
     </div>
-    ${reasonsHtml}
   `;
 
-  // Put it near top of the email view
-  const container = document.querySelector("div.nH");
-  if (container) container.prepend(banner);
-}
+  document.body.appendChild(overlay);
 
-async function analyzeEmail(emailData) {
-  const payload = {
-    subject: emailData.subject,
-    sender_name: emailData.senderName,
-    sender_email: emailData.senderEmail,
-    body: emailData.body
-  };
-
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+  // Close logic
+  document.querySelector(".safe-btn").addEventListener("click", () => {
+    overlay.remove();
+    window.history.back();
   });
-
-  if (!res.ok) throw new Error(`API error: ${res.status}`);
-  return await res.json();
 }
 
-async function checkIfEmailChanged() {
-  const data = getEmailDataFromGmail();
-  if (!data) return;
-
-  if (data.key === lastEmailKey) return;
-  lastEmailKey = data.key;
-
-  // tell background we’re checking (so popup/badge can update)
-  chrome.runtime.sendMessage({ type: "SCAM_GUARD_CHECKING" });
-
-  try {
-    const result = await analyzeEmail(data);
-
-    // show banner
-    showBanner(result);
-
-    // send to background so popup can show latest + badge updates
-    chrome.runtime.sendMessage({ type: "SCAM_GUARD_RESULT", result });
-
-  } catch (e) {
-    chrome.runtime.sendMessage({ type: "SCAM_GUARD_ERROR", error: String(e) });
-  }
-}
-
-// Gmail is a single-page app, so use a MutationObserver
-const observer = new MutationObserver(() => {
-  checkIfEmailChanged();
-});
-
-observer.observe(document.body, { childList: true, subtree: true });
-
-// also run once on load
-checkIfEmailChanged();
+showPhishPopup();
