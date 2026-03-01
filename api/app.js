@@ -1,8 +1,9 @@
-const checkRisk = require("./riskchecker");
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const Joi = require('joi');
+
+const riskChecker = require('riskchecker.js')
 
 // Initialize Express app
 const app = express();
@@ -17,20 +18,16 @@ app.use(bodyParser.json());
 const emailSchema = Joi.object({
   sender: Joi.string().email().required(),
   subject: Joi.string().required(),
-  body: Joi.string().required()
+  body: Joi.string().required(),
+  links: Joi.array().required()
 });
 
 app.get('/', (req, res) => {
-  res.send('Hello World!!=f')
+  res.send('Hello World!!')
 })
 
 // POST route to handle email details
 app.post('/details/', (req, res) => {
-  const link = req.body.link;
-
-  const riskResult = checkRisk(link);
-
-  console.log(riskResult);
   const { error, value } = emailSchema.validate(req.body);
   
   // If the email data is invalid, return 400
@@ -41,11 +38,12 @@ app.post('/details/', (req, res) => {
   // Print the received email data
   console.log("Received email:", value);
 
-  ///  Perform checks on the email (this is where your logic would go) ////
+  // Perform checks on the email (this is where your logic would go)
+
   
   // Dummy analysis result
   const result = {
-    score: 55,
+    score: 832,
     level: "suspicious",
     headline: "Headline here",
     reasons: ["Urgent language detected", "Link looks unusual"],
