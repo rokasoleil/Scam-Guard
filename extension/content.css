@@ -103,23 +103,111 @@
 }
 */
 /* don’t block the page */
-#phish-overlay{
-  position: fixed;
-  inset: auto 20px 20px auto;   /* bottom-right */
-  background: transparent;      /* no dim */
-  z-index: 999999;
-  display: block;
-  pointer-events: none;         /* clicks pass through */
+body {
+  width: 380px;
+  margin: 0;
   font-family: Arial, sans-serif;
+  background: #f0f2f5;
 }
 
-/* the card itself CAN be clicked */
-.phish-modal{
-  width: 360px;
-  max-height: 70vh;
-  overflow: auto;
+.phish-modal {
   background: white;
-  border-radius: 20px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
-  pointer-events: auto;         /* allow clicking buttons */
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+.phish-header {
+  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  color: white;
+  padding: 20px;
+}
+
+.phish-header h1 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.phish-header p {
+  margin: 5px 0 0;
+  font-size: 13px;
+}
+
+.risk-card {
+  text-align: center;
+  padding: 20px;
+}
+
+.risk-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 10px solid #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 24px;
+  font-weight: bold;
+  color: #ef4444;
+}
+
+.risk-label {
+  margin-top: 10px;
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.domain-card {
+  padding: 20px;
+}
+
+.detected {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.warning-box {
+  padding: 12px;
+  background: #fff1f1;
+  border-radius: 10px;
+  border: 1px solid #fecaca;
+  font-size: 13px;
+}
+
+.safe {
+  color: #16a34a;
+  font-weight: bold;
+}
+
+.danger {
+  color: #dc2626;
+  font-weight: bold;
+}
+
+.actions {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.safe-btn {
+  background: #2563eb;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.danger-btn {
+  background: white;
+  color: #dc2626;
+  border: 2px solid #dc2626;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
 }
