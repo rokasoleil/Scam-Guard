@@ -2,11 +2,12 @@
   "manifest_version": 3,
   "name": "Phish & Tell",
   "version": "1.0",
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"],
-      "css": ["content.css"]
-    }
-  ]
+  "description": "Phishing detection and education Chrome extension.",
+  "permissions": ["tabs"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  }
 }
