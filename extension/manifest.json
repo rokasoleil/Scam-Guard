@@ -1,22 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "Scam-Guard",
-  "version": "1.0.0",
-  "description": "Flags suspicious emails and explains why.",
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "Scam-Guard"
-  },
-  "permissions": ["storage", "activeTab", "scripting"],
-  "host_permissions": ["http://127.0.0.1:8000/*", "https://mail.google.com/*"],
-  "background": {
-    "service_worker": "background.js"
-  },
+  "name": "Phish & Tell",
+  "version": "1.0",
   "content_scripts": [
     {
-      "matches": ["https://mail.google.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["content.js"],
-      "run_at": "document_idle"
+      "css": ["content.css"]
     }
   ]
 }
