@@ -271,6 +271,5 @@
 
   // ─── Auto-demo: remove this block in production ───────────────────────────
   // Uncomment the line below to auto-show the popup on every page for testing:
-  // showWarning({ riskLevel: 78, detectedDomain: "queesnu-verify.tk", officialDomain: "queensu.ca", targetUrl: window.location.href });
 
 })();
