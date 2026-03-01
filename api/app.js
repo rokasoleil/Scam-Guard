@@ -3,7 +3,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const Joi = require('joi');
 
-const riskChecker = require('riskchecker.js')
+const riskChecker = require('riskchecker.js');
+const checkRisk = require('./riskchecker');
 
 // Initialize Express app
 const app = express();
@@ -39,17 +40,17 @@ app.post('/details/', (req, res) => {
   console.log("Received email:", value);
 
   // Perform checks on the email (this is where your logic would go)
-
+  const result = checkRisk();
   
   // Dummy analysis result
-  const result = {
+  /*const result = {
     score: 832,
     level: "suspicious",
     headline: "Headline here",
     reasons: ["Urgent language detected", "Link looks unusual"],
     hostname: "google.ca",
     final_url: "goolpe.zy"
-  };
+  };*/
 
   // Return the result as a JSON response
   res.json(result);

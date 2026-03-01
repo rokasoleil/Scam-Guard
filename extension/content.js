@@ -1,23 +1,31 @@
 // v1: just prove the content script runs on Gmail
 console.log("Email Safety Checker content script loaded");
 
-function sendDemoScanFromGmail() {
-  const demoEmail = {
-    subject: "Urgent: Verify your account",
-    senderEmail: "support@notreal-bank.com",
-    bodyText: "Your account will be suspended unless you verify now.",
-    links: ["http://192.168.0.1/login"]
-  };
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min;
+}
 
-  // For now, we still create a fake analysis result
-  const result = {
-    level: "dangerous",
-    score: 80,
-    reasons: ["IP address link detected", "Urgent language detected"],
-    at: Date.now()
-  };
+function getALink() {
+  // Gmail message body container
+  const bodyContainer = document.querySelector("div.a3s");
 
-  chrome.runtime.sendMessage({ type: "SET_LATEST_RESULT", payload: result });
+  if (!bodyContainer) {
+    console.log("Email body not found.");
+    return [];
+  }
+  let links = Array.from(bodyContainer.querySelectorAll("a"))
+    .map(a => a.href)
+    .filter(Boolean);
+
+  /*
+  const links = Array.from(anchors).map(a => ({
+    text: a.innerText.trim(),
+    href: a.href
+  }));*/
+
+  return links[getRandomInt(0, links.length)];
 }
 
 // content.js
@@ -34,13 +42,14 @@ async function extractGmailData() {
         body: JSON.stringify({
             "sender": sender,
             "subject": subject,
-            "body": body
+            "body": body,
+            "link": getALink()
         })
     });
 
     const data = await response.json();
 
-    // data.at = Date.now();
+    data.at = Date.now();
     return data;
 }
 
