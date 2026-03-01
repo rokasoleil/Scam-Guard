@@ -1,19 +1,11 @@
-let latestResult = null;
+chrome.action.onClicked.addListener((tab) => {
+  if (!tab.id) return;
 
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === "SET_LATEST_RESULT") {
-    latestResult = request.payload;
-    sendResponse({ ok: true });
-    return;
-  }
-
-  if (request.type === "GET_LATEST_RESULT") {
-    sendResponse(latestResult);
-    return;
-  }
-
-  if (request.type === "PING") {
-    sendResponse({ ok: true });
-    return;
-  }
+  chrome.tabs.sendMessage(tab.id, {
+    type: "SHOW_PHISH_POPUP",
+    payload: {
+      risk: 78,
+      domain: "queensu-verify.tk"
+    }
+  });
 });
