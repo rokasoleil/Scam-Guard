@@ -2,6 +2,10 @@
   "manifest_version": 3,
   "name": "Phish & Tell",
   "version": "1.0",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Phish & Tell"
+  },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
